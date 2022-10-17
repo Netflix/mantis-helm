@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose -f docker-compose.yml convert -c
+    kompose.version: 1.26.1 (HEAD)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: mantisagent
+  name: mantisagent
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: mantisagent
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose -f docker-compose.yml convert -c
+        kompose.version: 1.26.1 (HEAD)
+      creationTimestamp: null
+      labels:
+        io.kompose.network/mantis_net: "true"
+        io.kompose.service: mantisagent
+    spec:
+      containers:
+        - args:
+            - mesos-slave
+            - ' --master=zk://zookeeper:2181/mantis/mesos/nmahilani'
+            - ' --log_dir=/var/log/mesos/'
+            - ' --work_dir=/tmp/mesos_workdir'
+            - ' --logging_level=INFO'
+            - ' --hostname=mantisagent'
+            - ' --resources=ports:[7150-7400];ephemeral_ports:[32768-57344];network:1000'
+            - ' --attributes=region:laptop;asg:mantisagent-laptop-v001;stack:laptop;zone:laptopd;itype:macbook.pro;cluster:mantisagent-laptop;id:l-deadbeef;res:ResourceSet-ENIs-7-29'
+          image: netflixoss/mantisagent
+          name: mantisagent
+          ports:
+            - containerPort: 5051
+          resources: {}
+          securityContext:
+            privileged: true
+          volumeMounts:
+            - mountPath: /mnt/local/mantisWorkerInstall/jobs/
+              name: mantisagent-claim0
+      restartPolicy: Always
+      volumes:
+        - name: mantisagent-claim0
+          persistentVolumeClaim:
+            claimName: mantisagent-claim0
+status: {}

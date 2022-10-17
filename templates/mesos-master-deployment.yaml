@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose -f docker-compose.yml convert -c
+    kompose.version: 1.26.1 (HEAD)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: mesos-master
+  name: mesos-master
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: mesos-master
+  strategy: {}
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose -f docker-compose.yml convert -c
+        kompose.version: 1.26.1 (HEAD)
+      creationTimestamp: null
+      labels:
+        io.kompose.network/mantis_net: "true"
+        io.kompose.service: mesos-master
+    spec:
+      containers:
+        - args:
+            - mesos-master
+            - --zk=zk://zookeeper:2181/mantis/mesos/nmahilani
+            - --work_dir=/tmp/master
+            - --log_dir=/var/log/mesos
+            - --logging_level=INFO
+            - --quorum=1
+          image: mesosphere/mesos-master:1.3.2
+          name: mesos-master
+          ports:
+            - containerPort: 5050
+          resources: {}
+      restartPolicy: Always
+status: {}
