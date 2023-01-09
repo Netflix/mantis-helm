@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app.kubernetes.io/name: mantis-controlplane
+    app.kubernetes.io/part-of: mantis
+    app.kubernetes.io/component: server
+  name: mantis-controlplane
+spec:
+  type: NodePort
+  ports:
+    - name: api
+      port: {{ .Values.api_port }}
+      targetPort: {{ .Values.api_port }}
+    - name: metrics
+      port: {{ .Values.metrics_port }}
+      targetPort: {{ .Values.metrics_port }}
+  selector:
+    app.kubernetes.io/name: mantis-controlplane

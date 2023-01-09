@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/name: mantis-controlplane
+    app.kubernetes.io/part-of: mantis
+    app.kubernetes.io/component: server
+  name: mantis-controlplane
+spec:
+  replicas: {{ .Values.replicas | default 1 }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: mantis-controlplane
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: mantis-controlplane
+    spec:
+      containers:
+        - name: mantis-controlplane
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          image: {{ .Values.image | default "netflixoss/mantiscontrolplaneserver:latest" }}
+          # imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
+          env:
+            - name: JAVA_OPTS
+              value: -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005 -Dmantis.zookeeper.connectString=zookeeper:2181 -Dmesos.master.location=mesos-master:5050 -Dmantis.master.exit.on.losing.leader=false
+          #command: ["/server/service"]
+          volumeMounts:
+            - mountPath: /tmp
+              name: tmp
+            - mountPath: /app
+              name: app
+          ports:
+            - containerPort: {{ .Values.api_port }}
+            - containerPort: {{ .Values.metrics_port }}
+            # add more ports
+          # startupProbe:
+          #   httpGet:
+          #     port: {{ .Values.api_port }}
+          #     path: /api/v1/masterInfo
+          #   failureThreshold: 6
+          #   periodSeconds: 10
+          # readinessProbe:
+          #   httpGet:
+          #     port: {{ .Values.api_port }}
+          #     path: /api/v1/masterInfo
+          #   initialDelaySeconds: 10
+          #   periodSeconds: 5
+          # securityContext:
+          #   allowPrivilegeEscalation: false
+          #   readOnlyRootFilesystem: true
+          #   capabilities:
+          #     drop:
+          #       - all
+      volumes:
+        - name: tmp
+          emptyDir: {}
+        - name: app
+          emptyDir: {}
