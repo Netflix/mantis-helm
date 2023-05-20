@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app.kubernetes.io/name: mantis-agent
+    app.kubernetes.io/part-of: mantis
+    app.kubernetes.io/component: agent
+  name: mantis-agent
+spec:
+  type: NodePort
+  ports:
+    - name: api
+      port: {{ .Values.api_port }}
+      targetPort: {{ .Values.api_port }}
+  selector:
+    app.kubernetes.io/name: mantis-agent

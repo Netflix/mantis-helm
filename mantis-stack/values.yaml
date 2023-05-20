@@ -1,2 +1,2 @@
 zookeeper:
-  fullnameOverride: zookeeper
+  fullnameOverride: foobar
