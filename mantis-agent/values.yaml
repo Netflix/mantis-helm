@@ -1,5 +1,4 @@
-image: 
-  repository: hmittal-agent
+image: netflixoss/mantisagent:latest
 
 # Ports used by Mantis control plane
 api_port: 5050

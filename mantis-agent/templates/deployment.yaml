@@ -20,12 +20,19 @@ spec:
         - name: mantis-agent
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
-          image: {{ .Values.image | default "hmittal-agent" }}
-          # imagePullPolicy: IfNotPresent
-          imagePullPolicy: IfNotPresent
+          image: {{ .Values.image | default "netflixoss/mantisagent:latest" }}
+          imagePullPolicy: Always
           env:
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: POD_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
             - name: JAVA_OPTS
-              value: -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005 -Dmantis.taskexecutor.id=agent1 -Dmantis.taskexecutor.rpc.external-address=
+              value: -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005 -Dmantis.taskexecutor.id=$(POD_NAME) -Dmantis.taskexecutor.rpc.external-address=$(POD_IP)
           #command: ["/server/service"]
           volumeMounts:
             - mountPath: /tmp
@@ -34,25 +41,6 @@ spec:
               name: app
           ports:
             - containerPort: {{ .Values.api_port }}
-            # add more ports
-          # startupProbe:
-          #   httpGet:
-          #     port: {{ .Values.api_port }}
-          #     path: /api/v1/masterInfo
-          #   failureThreshold: 6
-          #   periodSeconds: 10
-          # readinessProbe:
-          #   httpGet:
-          #     port: {{ .Values.api_port }}
-          #     path: /api/v1/masterInfo
-          #   initialDelaySeconds: 10
-          #   periodSeconds: 5
-          # securityContext:
-          #   allowPrivilegeEscalation: false
-          #   readOnlyRootFilesystem: true
-          #   capabilities:
-          #     drop:
-          #       - all
       volumes:
         - name: tmp
           emptyDir: {}
