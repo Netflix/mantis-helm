@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/name: mantis-agent
+    app.kubernetes.io/part-of: mantis
+    app.kubernetes.io/component: agent
+  name: mantis-agent
+spec:
+  replicas: {{ .Values.replicas | default 3 }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: mantis-agent
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: mantis-agent
+    spec:
+      containers:
+        - name: mantis-agent
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          image: {{ .Values.image | default "netflixoss/mantisagent:latest" }}
+          imagePullPolicy: Always
+          env:
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: POD_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
+            - name: JAVA_OPTS
+              value: -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005 -Dmantis.taskexecutor.id=$(POD_NAME) -Dmantis.taskexecutor.rpc.external-address=$(POD_IP)
+          #command: ["/server/service"]
+          volumeMounts:
+            - mountPath: /tmp
+              name: tmp
+            - mountPath: /app
+              name: app
+          ports:
+            - containerPort: {{ .Values.api_port }}
+      volumes:
+        - name: tmp
+          emptyDir: {}
+        - name: app
+          emptyDir: {}

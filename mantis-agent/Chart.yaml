@@ -1,6 +1,6 @@
 apiVersion: v2
-name: mantis-stack
-description: A Helm chart to run a fully functional Mantis deployment
+name: mantis-agent
+description: A Helm chart for Mantis Task Executors (mantisagent)
 
 # A chart can be either an 'application' or a 'library' chart.
 #
@@ -15,21 +15,10 @@ type: application
 # This is the chart version. This version number should be incremented each time you make changes
 # to the chart and its templates, including the app version.
 # Versions are expected to follow Semantic Versioning (https://semver.org/)
-version: 0.2.0
+version: 0.1.1
 
 # This is the version number of the application being deployed. This version number should be
 # incremented each time you make changes to the application. Versions are not expected to
 # follow Semantic Versioning. They should reflect the version the application is using.
 # It is recommended to use it with quotes.
-appVersion: "1.3.58"
-
-dependencies:
-  - name: zookeeper
-    version: 11.x.x
-    repository: https://charts.bitnami.com/bitnami
-  - name: mantis-controlplane
-    version: 0.1.x
-    repository: file://../mantis-controlplane
-  - name: mantis-agent
-    version: 0.1.x
-    repository: file://../mantis-agent
+appVersion: "1.3.58.2"
