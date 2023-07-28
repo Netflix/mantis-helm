@@ -17,6 +17,7 @@ Deploys Mantis and necessary services with Helm and Kubernetes.
 minikube start
 ```
 
+
 2. Point docker-cli to Docker running in minikube
 ```sh
 minikube docker-env
@@ -55,19 +56,16 @@ image: localhost:5001/netflixoss/mantiscontrolplaneserver:latest
 helm dependency update  
 ```
 
-3. Use Helm to deploy the Mantis stack on minikube
+9. Use Helm to deploy the Mantis stack on minikube
 ```sh
 cd mantis-stack
 helm upgrade --install --reset-values --force mantis-stack .  
 ```
 
-4. Verify the services are running with Kubernetes CLI
+10. Verify the services are running with Kubernetes CLI
 ```sh
 kubectl get all
 ```
-
-
-1. Fetch latest mantis-control-plane image from docker hub [netflixoss/mantiscontrolplaneserver](https://hub.docker.com/r/netflixoss/mantiscontrolplaneserver/tags) OR Build one locally from the [Mantis repo](https://github.com/Netflix/mantis/blob/master/mantis-control-plane/buildDockerImage.sh).
 
 ## Inspection Tips
 
