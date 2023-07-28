@@ -1,4 +1,5 @@
 image: netflixoss/mantiscontrolplaneserver:latest
+# image: localhost:5001/netflixoss/mantiscontrolplaneserver:latest
 
 # Ports used by Mantis control plane
 api_port: 8100

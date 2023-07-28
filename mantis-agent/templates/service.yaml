@@ -7,10 +7,12 @@ metadata:
     app.kubernetes.io/component: agent
   name: mantis-agent
 spec:
-  type: NodePort
+  type: ClusterIP
   ports:
     - name: api
       port: {{ .Values.api_port }}
       targetPort: {{ .Values.api_port }}
   selector:
     app.kubernetes.io/name: mantis-agent
+  # Run headless so pod is reachable by other pods by IP
+  clusterIP: None

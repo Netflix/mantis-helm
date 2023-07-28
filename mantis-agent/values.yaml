@@ -1,4 +1,5 @@
 image: netflixoss/mantisagent:latest
+# image: localhost:5001/netflixoss/mantisagent:latest
 
 # Ports used by Mantis control plane
 api_port: 5050

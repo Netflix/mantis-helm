@@ -1,12 +1,12 @@
 dependencies:
 - name: zookeeper
   repository: https://charts.bitnami.com/bitnami
-  version: 11.4.1
+  version: 11.4.10
 - name: mantis-controlplane
   repository: file://../mantis-controlplane
   version: 0.1.1
 - name: mantis-agent
   repository: file://../mantis-agent
   version: 0.1.1
-digest: sha256:eff5f2502e60718f958cccc5c15356fd7582edc4428878cce9087091a28ba046
-generated: "2023-05-20T00:35:42.421049-07:00"
+digest: sha256:e86fe90f5f158bec67e4f2257a6afcffeb862e97110ef94c75207772302191c8
+generated: "2023-07-27T12:32:42.825334-07:00"
