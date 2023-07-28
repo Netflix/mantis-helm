@@ -7,7 +7,7 @@ metadata:
     app.kubernetes.io/component: server
   name: mantis-controlplane
 spec:
-  type: NodePort
+  type: ClusterIP
   ports:
     - name: api
       port: {{ .Values.api_port }}
@@ -17,3 +17,5 @@ spec:
       targetPort: {{ .Values.metrics_port }}
   selector:
     app.kubernetes.io/name: mantis-controlplane
+  # Run headless so pod is reachable by other pods by IP
+  clusterIP: None
