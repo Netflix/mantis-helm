@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app.kubernetes.io/name: mantis-api
+    app.kubernetes.io/part-of: mantis
+    app.kubernetes.io/component: api
+  name: mantis-api
+spec:
+  type: ClusterIP
+  ports:
+    - name: api
+      port: {{ .Values.api_port }}
+  selector:
+    app.kubernetes.io/name: mantis-api
+  # Run headless so pod is reachable by other pods by IP
+  clusterIP: None
