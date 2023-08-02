@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/name: mantis-api
+    app.kubernetes.io/part-of: mantis
+    app.kubernetes.io/component: api
+  name: mantis-api
+spec:
+  replicas: {{ .Values.replicas | default 1 }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: mantis-api
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: mantis-api
+    spec:
+      containers:
+        - name: mantis-api
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          image: {{ .Values.image | default "netflixoss/mantisapi:latest" }}
+          imagePullPolicy: Always
+          env:
+            - name: JAVA_OPTS
+              value: -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005
+          #command: ["/server/service"]
+          volumeMounts:
+            - mountPath: /tmp
+              name: tmp
+            - mountPath: /app
+              name: app
+          ports:
+            - containerPort: {{ .Values.api_port }}
+      volumes:
+        - name: tmp
+          emptyDir: {}
+        - name: app
+          emptyDir: {}

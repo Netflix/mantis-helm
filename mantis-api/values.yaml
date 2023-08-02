@@ -1,9 +1,8 @@
-image: netflixoss/mantisagent:latest
-#image: localhost:5001/netflixoss/mantisagent:latest
+image: netflixoss/mantisapi:latest
+#image: localhost:5001/netflixoss/mantisapi:latest
 
 # Ports used by Mantis control plane
-api_port: 5050
-metrics_port: 5005
+api_port: 7001
 # add other ports here
 
 # Only logs every y request
@@ -13,7 +12,7 @@ log_sample_rate: 0.0001
 trace_sample_rate: 0.0001
 
 # The number of Pods serving requests
-replicas: 3
+replicas: 1
 
 # Resources
 resources:

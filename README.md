@@ -78,3 +78,9 @@ minikube dashboard
 ```sh
 kubectl port-forward  deployment.apps/mantis-controlplane 8100
 ```
+
+3. To make calls to mantis-api, you can port-forward a local port to port 7001 of container using
+```sh
+kubectl port-forward  deployment.apps/mantis-api 7001
+```
+You can now access mantis UI (https://netflix.github.io/mantis-ui) with `http://localhost:7001` as the `Mantis Master API URL`
