@@ -13,48 +13,47 @@ Deploys Mantis and necessary services with Helm and Kubernetes.
 ## Steps
 
 1. Start minikube
-```sh
-minikube start
-```
-
+    ```sh
+    minikube start
+    ```
 1. Point docker-cli to Docker running in minikube
-```sh
-minikube docker-env
-eval $(minikube -p minikube docker-env)
-```
-From this point on, `docker` command points to minikube's Docker instance.
+    ```sh
+    minikube docker-env
+    eval $(minikube -p minikube docker-env)
+    ```
+    From this point on, `docker` command points to minikube's Docker instance.
 
 1. Start local Docker registry in minikube Docker (the `docker` command is talking to minikube Docker)
-```sh
-docker run -d -p 5001:5000 --restart=always --name registry registry:2
-```
-We tunnel port `5001` to `5000`, you can choose any available port.
+    ```sh
+    docker run -d -p 5001:5000 --restart=always --name registry registry:2
+    ```
+    We tunnel port `5001` to `5000`, you can choose any available port.
 
 1. Build Docker images from the latest Mantis code. The images are automatically pushed to the local Docker registry used by Minikube as long as the shell has Minikube’s environment.
-```sh
-./gradlew dockerPushImage
-```
+    ```sh
+    ./gradlew dockerPushImage
+    ```
 
 1. Make local changes to `mantis-controlplane/values.yaml` to fetch local image. Update the `image` value:
-```
-image: localhost:5001/netflixoss/mantiscontrolplaneserver:latest
-```
+    ```
+    image: localhost:5001/netflixoss/mantiscontrolplaneserver:latest
+    ```
 
 1. Update Helm charts to pick up `values.yaml` changes
-```sh
-helm dependency update  
-```
+    ```sh
+    helm dependency update  
+    ```
 
 1. Use Helm to deploy the Mantis stack on minikube
-```sh
-cd mantis-stack
-helm upgrade --install --reset-values --force mantis-stack .  
-```
+    ```sh
+    cd mantis-stack
+    helm upgrade --install --reset-values --force mantis-stack .  
+    ```
 
 1. Verify the services are running with Kubernetes CLI
-```sh
-kubectl get all
-```
+    ```sh
+    kubectl get all
+    ```
 
 ## Inspection Tips
 
