@@ -32,7 +32,7 @@ spec:
                 fieldRef:
                   fieldPath: status.podIP
             - name: JAVA_OPTS
-              value: -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005 -Dmantis.taskexecutor.id=$(POD_NAME) -Dmantis.taskexecutor.rpc.external-address=$(POD_IP)
+              value: -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005 -Dmantis.taskexecutor.id=$(POD_NAME) -Dmantis.taskexecutor.rpc.external-address=$(POD_IP) --add-opens java.base/java.lang=ALL-UNNAMED --add-opens java.base/sun.net.util=ALL-UNNAMED
           #command: ["/server/service"]
           volumeMounts:
             - mountPath: /tmp
