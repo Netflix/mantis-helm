@@ -61,6 +61,8 @@ spec:
           #       - all
       volumes:
         - name: tmp
-          emptyDir: {}
+          hostPath:
+            path: /tmp/{{ .Chart.Name }}-{{ .Chart.Version }}
         - name: app
-          emptyDir: {}
+          hostPath:
+            path: /app/{{ .Chart.Name }}-{{ .Chart.Version }}
