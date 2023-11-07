@@ -30,7 +30,7 @@ spec:
                   fieldPath: status.podIP
             # Hack to use IP address as hostname to make it reachable by agents
             - name: JAVA_OPTS
-              value: -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005 -Dmantis.zookeeper.connectString=zookeeper:2181 -Dmantis.master.exit.on.losing.leader=false -Dmantis.master.host=$(POD_IP) --add-opens java.base/java.lang=ALL-UNNAMED --add-opens java.base/sun.net.util=ALL-UNNAMED
+              value: -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005 -Dmantis.zookeeper.connectString=zookeeper:2181 -Dmantis.master.exit.on.losing.leader=false -Dmantis.master.host=$(POD_IP)
           #command: ["/server/service"]
           volumeMounts:
             - mountPath: /tmp
