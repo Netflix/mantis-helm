@@ -25,5 +25,5 @@ spec:
           imagePullPolicy: Always
           env:
             - name: JAVA_OPTS
-              value: -mantis.publish.discovery.api.hostname={{ include "mantis.api.host" . }} -mantis.publish.discovery.api.port=7001
+              value: -Dmantis.publish.discovery.api.hostname={{ include "mantis.api.host" . }} -Dmantis.publish.discovery.api.port=7001
 {{- end }}

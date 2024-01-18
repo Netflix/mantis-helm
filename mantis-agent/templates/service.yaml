@@ -12,6 +12,9 @@ spec:
     - name: api
       port: {{ .Values.api_port }}
       targetPort: {{ .Values.api_port }}
+    - name: sink
+      port: {{ .Values.sink_port }}
+      targetPort: {{ .Values.sink_port }}
   selector:
     app.kubernetes.io/name: mantis-agent
   # Run headless so pod is reachable by other pods by IP
