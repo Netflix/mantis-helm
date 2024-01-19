@@ -1,2 +1,20 @@
 zookeeper:
   fullnameOverride: zookeeper
+
+mantis:
+  ## kubernetes cluster domain name
+  ## - configured in the kubelet with `--cluster-domain` flag (deprecated):
+  ##   https://kubernetes.io/docs/reference/command-line-tools-reference/kubelet/
+  ## - or configured in the kubelet with configuration file `clusterDomain` option:
+  ##   https://kubernetes.io/docs/tasks/administer-cluster/kubelet-config-file/
+  ##
+  clusterDomain: "cluster.local"
+
+  ######################################
+  ## COMPONENT | Mantis Sample Publisher
+  ######################################
+  samplePublisher:
+    ## if the publisher sample deployment should be created
+    ##
+    enabled: true
+    image: netflixoss/mantis-publisher-sample:latest

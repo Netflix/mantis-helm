@@ -33,8 +33,6 @@ spec:
               value: -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005 -Dmantis.zookeeper.connectString=zookeeper:2181 -Dmantis.master.exit.on.losing.leader=false -Dmantis.master.host=$(POD_IP)
           #command: ["/server/service"]
           volumeMounts:
-            - mountPath: /tmp
-              name: tmp
             - mountPath: /app
               name: app
           ports:
@@ -61,6 +59,8 @@ spec:
           #       - all
       volumes:
         - name: tmp
-          emptyDir: {}
+          hostPath:
+            path: /tmp/{{ .Chart.Name }}-{{ .Chart.Version }}
         - name: app
-          emptyDir: {}
+          hostPath:
+            path: /app/{{ .Chart.Name }}-{{ .Chart.Version }}

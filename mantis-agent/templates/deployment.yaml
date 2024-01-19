@@ -41,6 +41,7 @@ spec:
               name: app
           ports:
             - containerPort: {{ .Values.api_port }}
+            - containerPort: {{ .Values.sink_port }}
       volumes:
         - name: tmp
           emptyDir: {}

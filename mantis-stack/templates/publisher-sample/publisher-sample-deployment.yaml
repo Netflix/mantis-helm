@@ -1,0 +1,29 @@
+{{- if (.Values.mantis.samplePublisher.enabled) }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/name: mantis-publisher-sample
+    app.kubernetes.io/part-of: mantis
+    app.kubernetes.io/component: mantis-publisher
+  name: mantis-publisher-sample
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: mantis-publisher-sample
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: mantis-publisher-sample
+    spec:
+      containers:
+        - name: mantis-publisher-sample
+          resources:
+            {{- toYaml .Values.mantis.samplePublisher.resources | nindent 12 }}
+          image: {{ .Values.mantis.samplePublisher.image | default "netflixoss/mantis-publisher-sample:latest" }}
+          imagePullPolicy: Always
+          env:
+            - name: JAVA_OPTS
+              value: -Dmantis.publish.discovery.api.hostname={{ include "mantis.api.host" . }} -Dmantis.publish.discovery.api.port=7001
+{{- end }}

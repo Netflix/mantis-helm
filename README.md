@@ -47,7 +47,7 @@ Deploys Mantis and necessary services with Helm and Kubernetes.
 1. Use Helm to deploy the Mantis stack on minikube
     ```sh
     cd mantis-stack
-    helm upgrade --install --reset-values --force mantis-stack .  
+    helm upgrade --install --reset-values --force mantis-stack .
     ```
 
 1. Verify the services are running with Kubernetes CLI

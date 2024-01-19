@@ -4,6 +4,7 @@ image: netflixoss/mantisagent:latest
 # Ports used by Mantis control plane
 api_port: 5050
 metrics_port: 5005
+sink_port: 5054
 # add other ports here
 
 # Only logs every y request
@@ -13,7 +14,7 @@ log_sample_rate: 0.0001
 trace_sample_rate: 0.0001
 
 # The number of Pods serving requests
-replicas: 3
+replicas: 2
 
 # Resources
 resources:
