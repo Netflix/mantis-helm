@@ -17,4 +17,4 @@ mantis:
     ## if the publisher sample deployment should be created
     ##
     enabled: true
-    image: localhost:5001/netflixoss/mantis-publisher-sample:latest
+    image: netflixoss/mantis-publisher-sample:latest
