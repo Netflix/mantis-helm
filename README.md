@@ -2,7 +2,18 @@
 
 Deploys Mantis and necessary services with Helm and Kubernetes.
 
-# Deploy locally
+By default, the chart starts the following services:
+
+1. **Mantis Control Plane** - This is the main service that runs the Mantis Control Plane.
+2. **Mantis API** - This is the API service that exposes Mantis API.
+3. **Mantis Agent** - Two mantis agents are started by default. These are the agents that run the
+   Mantis jobs.
+4. **Mantis Publisher** - This is a sample service that publishes events to Mantis.
+
+# Deploying locally
+
+These steps use minikube to deploy Mantis locally.
+You can use any Kubernetes cluster to deploy the Mantis chart.
 
 ## Prerequisites
 
@@ -16,59 +27,96 @@ Deploys Mantis and necessary services with Helm and Kubernetes.
     ```sh
     minikube start
     ```
-1. Point docker-cli to Docker running in minikube
+2. Point docker-cli to Docker running in minikube
     ```sh
-    minikube docker-env
     eval $(minikube -p minikube docker-env)
     ```
-    From this point on, `docker` command points to minikube's Docker instance.
+   From this point on, `docker` command points to minikube's Docker instance.
 
-1. Start local Docker registry in minikube Docker (the `docker` command is talking to minikube Docker)
+3. Use Helm to deploy the Mantis stack on minikube
+    ```sh
+    cd mantis-stack
+    helm upgrade --install mantis-stack .
+    ```
+
+4. You can now look at minikube dashboard via the following command to verify if all the pods are
+   running successfully.
+   The pods may take a few minutes to start up.
+   ```sh
+   minikube dashboard
+   ```
+
+5. By default, the Mantis stack starts the `SharedMrePublishEventSource` source job that allows
+   services to publish events to Mantis.
+   You can verify that the job is running successfully by looking at the Mantis UI.
+   For this, set up port-forwarding to the Mantis API service.
+   Mantis API service is exposed on port 7001. You can port-forward a local port to port 7001 of
+   container using
+   ```sh
+   kubectl port-forward  deployment.apps/mantis-api 7001
+   ```
+   You can now access [Mantis UI](https://netflix.github.io/mantis-ui) with `http://localhost:7001`
+   as the `Mantis Master API URL`.
+   You can verify that the `SharedMrePublishEventSource` job is running successfully by looking at
+   the [Jobs tab](https://netflix.github.io/mantis-ui/#/jobs) in the UI or
+   by looking at the job cluster status on
+   the [Job Cluster Page](https://netflix.github.io/mantis-ui/#/clusters/SharedMrePublishEventSource).
+
+6. You can now run MQL (Mantis Query Language) queries against the Mantis Publisher service to
+   verify
+   that the events are being published.
+   For this, let's run the following queries which should only propagate android events from the
+   publisher service.
+   ```sql
+    SELECT * FROM defaultStream where e["deviceType"] == "android"
+    ```
+
+   To run the query, you can use the MQL Query UI on
+   the [Job Cluster Page](https://netflix.github.io/mantis-ui/#/clusters/SharedMrePublishEventSource).
+   ```angular2html
+   http://localhost:7001/api/v1/jobconnectbyid/SharedMrePublishEventSource-1?clientId=sundaram&subscriptionId=sundaram&criterion=SELECT%20%2A%20FROM%20defaultStream%20where%20e%5B%22deviceType%22%5D%20%3D%3D%20%22android%22
+   ```
+
+## Deploying Mantis stack with local changes
+
+1. We need a Docker registry to host the images that can be read from within the minikube cluster.
+   To achieve this, start a local Docker registry in minikube Docker (the `docker` command is
+   talking to minikube
+   Docker)
     ```sh
     docker run -d -p 5001:5000 --restart=always --name registry registry:2
     ```
-    We tunnel port `5001` to `5000`, you can choose any available port.
+   We tunnel port `5001` to `5000`, you can choose any available port.
 
-1. Build Docker images from the latest Mantis code. The images are automatically pushed to the local Docker registry used by Minikube as long as the shell has Minikube’s environment.
+2. Build Docker images from your checked out version
+   of [Mantis codebase](https://github.com/Netflix/mantis).
+   The images are automatically pushed to the local Docker registry used by Minikube as long as the
+   shell has Minikube’s environment.
     ```sh
+    # Run this command from mantis root directory
     ./gradlew dockerPushImage
     ```
 
-1. Make local changes to `mantis-controlplane/values.yaml` to fetch local image. Update the `image` value:
+3. Make local changes to `mantis-controlplane/values.yaml` to fetch local image. Update the `image`
+   value:
     ```
     image: localhost:5001/netflixoss/mantiscontrolplaneserver:latest
     ```
 
-1. Update Helm charts to pick up `values.yaml` changes
+4. Update Helm charts to pick up `values.yaml` changes
     ```sh
+    # Run this command from mantis-stack directory   
     helm dependency update  
     ```
 
-1. Use Helm to deploy the Mantis stack on minikube
-    ```sh
-    cd mantis-stack
-    helm upgrade --install --reset-values --force mantis-stack .
-    ```
-
-1. Verify the services are running with Kubernetes CLI
+5. Verify the services are running with Kubernetes CLI
     ```sh
     kubectl get all
     ```
 
-## Inspection Tips
+## Useful commands
 
-1. You can also look at minikube dashboard via
-```sh
-minikube dashboard
-```
-
-2. To make calls to mantis-master, you can port-forward a local port to port 8100 of container using
-```sh
-kubectl port-forward  deployment.apps/mantis-controlplane 8100
-```
-
-3. To make calls to mantis-api, you can port-forward a local port to port 7001 of container using
-```sh
-kubectl port-forward  deployment.apps/mantis-api 7001
-```
-You can now access mantis UI (https://netflix.github.io/mantis-ui) with `http://localhost:7001` as the `Mantis Master API URL`
+1. To make calls to mantis-master, you can port-forward a local port to port 8100 of container using
+   ```sh
+   kubectl port-forward  deployment.apps/mantis-controlplane 8100
+   ```
