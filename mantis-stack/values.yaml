@@ -1,5 +1,9 @@
 zookeeper:
   fullnameOverride: zookeeper
+  image:
+    registry: docker.io
+    repository: bitnamilegacy/zookeeper
+    tag: "3.8.2-debian-11-r21"
 
 mantis:
   ## kubernetes cluster domain name
@@ -17,4 +21,5 @@ mantis:
     ## if the publisher sample deployment should be created
     ##
     enabled: true
-    image: netflixoss/mantis-publisher-sample:latest
+    # TODO: Using :latest once we cut of the official release
+    image: netflixoss/mantis-publisher-sample:4.0.2-rc.3
