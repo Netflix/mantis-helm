@@ -103,13 +103,25 @@ You can use any Kubernetes cluster to deploy the Mantis chart.
     image: localhost:5001/netflixoss/mantiscontrolplaneserver:latest
     ```
 
-4. Update Helm charts to pick up `values.yaml` changes
+4. local this local image from local machine the minikube container runtime
+   ```
+   minikube image load localhost:5001/netflixoss/mantiscontrolplaneserver:latest
+   ```
+
+5. temporarily change the imagePullPolicy from `Always` to `IfNotPresent` (this is must!!)
+
+6. Update Helm charts to pick up `values.yaml` changes
     ```sh
     # Run this command from mantis-stack directory   
     helm dependency update  
     ```
+7. verify the k8s yaml config output with
+   ```
+   > cd mantis-stack
+   > helm template mantis-stack . -f values.yaml
+   to validate the imagePullPolicy if changed or not
 
-5. Verify the services are running with Kubernetes CLI
+8. Verify the services are running with Kubernetes CLI
     ```sh
     kubectl get all
     ```
